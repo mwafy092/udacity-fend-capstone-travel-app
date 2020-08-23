@@ -14,3 +14,5 @@ export function appFunc() {
         }, 2000);
     });
 }
+
+appFunc();
