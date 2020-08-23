@@ -1,0 +1,282 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
+
+* {
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+}
+*:focus {
+    outline: none;
+}
+
+body {
+    font-family: 'Montserrat', sans-serif;
+}
+
+.container {
+    margin: 0 1em;
+}
+
+/* top section */
+.hero-bg {
+    background: #307D99 url(./images/bg.jpg);
+    background-position: 100% 50%;
+    background-repeat: no-repeat;
+}
+
+.top-section {
+    color: white;
+    text-align: center;
+    padding-bottom: 4em;
+}
+
+.logo {
+    text-decoration: none;
+    font-weight: bold;
+    color: white;
+    font-size: 1.2rem;
+    display: inline-block;
+    margin: 1em 0;
+}
+
+h1 {
+    font-size: 2.5rem;
+    margin: 2em 0 1.5em;
+
+}
+
+h1 span {
+    text-transform: uppercase;
+    font-size: 1.5rem;
+    display: block;
+    margin-bottom: 0.5em;
+    position: relative;
+    z-index: 1;
+}
+
+h1 span::before {
+    content: "";
+    position: absolute;
+    width: 4em;
+    height: 0.4em;
+    background: #00BFFF;
+    bottom: 0;
+    z-index: -1;
+    margin-left: -0.3em;
+}
+
+header p { 
+    font-weight: bold;
+    margin: 0 1em 3em;
+}
+
+.form-container {
+    background-color: white;
+    margin: 2em -1em 0;
+    padding: 2em;
+}
+
+.form-container label {
+    color: #307D99;
+    font-weight: bold;
+    font-size: 1.2rem;
+    display: block;
+    margin-bottom: 1em;
+}
+
+input[type="text"] {
+    border: 1px solid #707070;
+    width: 100%;
+    border-radius: 0.5em;
+    padding: 1em;
+    
+}
+
+.form-example {
+    color: rgb(146, 143, 143);
+    font-size: 0.9rem;
+    margin-top: 0.5em;
+}
+
+input[type="button"] {
+    width: 100%;
+    border: none;
+    background: #F89104;
+    color: white;
+    font-weight: bold;
+    font-size: 1.2rem;
+    padding: 1em 0;
+    border-radius: 0.5em;
+    margin-top: 1em;
+    cursor: pointer;
+    transition: background 0.4s ease-in-out, color 0.4s ease-in-out;
+}
+
+input[type="button"]:hover {
+    background: white;
+    color: #F89104;
+    border: 1px solid #F89104;
+}
+
+/* bottom section */
+.bottom-section .container {
+    margin: 0;
+}
+
+.main-body {
+    text-align: center;
+    padding: 3em 2em;
+    margin: 1em 0;
+}
+
+.main-body h2 {
+    text-transform: uppercase;
+    position: relative;
+    z-index: 1;
+
+}
+.main-body h2::before {
+    content:"";
+    background: rgba(0, 191, 255, 0.671);
+    width: 8em;
+    height: 0.4em;
+    position: absolute;
+    bottom: 0;
+    margin-left: -0.4em;
+    z-index: -1;
+}
+
+.main-body p {
+    line-height: 2em;
+}
+
+
+.food-img img {
+    width: 100%;
+}
+
+footer {
+    font-size: 0.8rem;
+    color: #707070;
+    font-weight: bold;
+    text-transform: uppercase;
+    text-align: center;
+}
+
+.overlay {
+    position: absolute;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.9);
+    color: white;
+    letter-spacing: 0.5em;
+    display: grid;
+    place-content: center;
+    z-index: 1;
+    display: none;
+}
+
+
+/* media query */
+
+@media only screen and (min-width: 700px) {
+    .container {
+        margin: 0 4em;
+    }
+
+    .form-container {
+        margin: 2em -4em 0;
+    }
+}
+
+@media only screen and (min-width: 900px) {
+    
+    .top-section {
+        text-align: left;
+    }
+
+    .top-section h1 {
+        font-size: 3.5rem;
+    }
+
+    .top-section .container {
+        width: 700px;
+    }
+
+    .form-container {
+        margin: 4em 0 0;
+        padding: 2em;
+        border-radius: 1em;
+        box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.4);
+    }
+
+    form {
+        display: flex;
+        justify-content: space-between;
+    }
+    input[type="text"] {
+        width: 170%;
+    }
+
+    input[type="button"] {
+        width: 110%;
+        margin-right: 2em ;
+        font-size: 1rem;
+        margin-top: 2.6em;
+    }
+    
+    .bottom-section .container {
+        display: grid;
+        grid-template-columns: repeat(2, 50%);
+        grid-template-areas: "left right";
+    }
+
+    .main-body {
+        grid-area: right;
+        padding: 0 10%;
+        align-self: center;
+        text-align: left;
+    }
+
+    .food-img {
+        grid-area: left;
+    }
+  
+    
+}
+
+
+/* css animations */
+.animate {
+    animation: fadeIn 2s forwards;
+}
+
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+        transform: translateY(-4em);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.overlay-animation {
+    animation: overlay 2s forwards;
+}
+
+@keyframes overlay {
+    0% {
+        opacity: 0;
+    }
+    30% {
+        opacity: 1;
+    }
+    70% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+    }
+}
