@@ -1,4 +1,4 @@
-
+let appStorage = {};
 export function travelAppFunc() {
     let btn = document.querySelector('#btn');
     let overlay = document.querySelector('#overlay');
@@ -17,9 +17,7 @@ export function travelAppFunc() {
         let city = document.getElementById('city').value;
         let startDate = document.getElementById('startDate').value;
         let endDate = document.getElementById('endDate').value;
-
         // main app data storage
-        let appStorage = {};
         appStorage.city = city;
 
         // get image from api and post it to server
@@ -35,9 +33,18 @@ export function travelAppFunc() {
                 return newData;
             })
             .then(cityData => {
-                getWeather(cityData.lat, cityData.lng)
+                getWeather(cityData.lat, cityData.lng, startDate)
             })
+            .then(() => {
+                setTimeout(() => {
+                    postData('/appStorage', { city: appStorage.city, image: appStorage.image, temp: appStorage.temp });
+                }, 2000)
+            })
+        setTimeout(() => {
+            console.log(appStorage)
+        }, 2000)
     });
+
 }
 
 // calling main function
@@ -61,13 +68,16 @@ let geoLocation = async (city) => {
 }
 
 // weather api
-let getWeather = async (lat, lon) => {
+let getWeather = async (lat, lon, startDate) => {
     let apiKey = 'ca3dc503fc9749e3bd5ce1859ee62e4d'
-    let url = `https://api.weatherbit.io/v2.0/forecast/daily?&lat=${lat}&lon=${lon}
-    &key=${apiKey}`
+    // let url = `https://api.weatherbit.io/v2.0/forecast/daily?&lat=${lat}&lon=${lon}
+    // &key=${apiKey}`;
+    let url = `https://api.weatherbit.io/v2.0/current?lat=${lat}&lon=${lon}&key=${apiKey}`
+
     const response = await fetch(url);
     try {
         const receivedData = await response.json();
+        appStorage.temp = receivedData.data[0].app_temp;
         return receivedData;
     }
     catch (error) {

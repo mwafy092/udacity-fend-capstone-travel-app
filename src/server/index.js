@@ -18,9 +18,13 @@ app.listen(port, function () {
 })
 
 
-// let appStorage = []
-// app.post('/appStorage', (request, response) => {
-//     appStorage.push(request.body)
-//     console.log(appStorage)
-// })
+let serverStorage = {};
+app.post('/appStorage', (request, response) => {
+    serverStorage = {
+        city: request.body.city,
+        image: request.body.image,
+        temp: request.body.temp
+    }
+    console.log(serverStorage)
+})
 
