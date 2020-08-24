@@ -20,6 +20,7 @@ export function travelAppFunc() {
         // main app data storage
         appStorage.city = city;
 
+        duration(startDate, endDate);
         // get image from api and post it to server
         getImage(city)
             .then(data => {
@@ -123,7 +124,13 @@ const postData = async (url = '', data = {}) => {
         console.log('error', error)
     }
 }
-
+let duration = (startDate, endDate) => {
+    let start = new Date(startDate);
+    let end = new Date(endDate);
+    let duration = Math.floor(end - start);
+    let durationInDays = Math.floor(duration / (1000 * 60 * 60 * 24) + 1);
+    document.getElementById('duration').innerHTML = durationInDays;
+}
 
 // get info and update UI
 let updateUI = async (startDate, endDate) => {
