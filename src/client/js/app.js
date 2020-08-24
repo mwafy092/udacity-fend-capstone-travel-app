@@ -11,7 +11,7 @@ export function travelAppFunc() {
         // set display to none after 3 seconds 
         setTimeout(function () {
             overlay.style.display = "none";
-        }, 2000);
+        }, 3000);
 
         // user information
         let city = document.getElementById('city').value;
@@ -23,7 +23,8 @@ export function travelAppFunc() {
         // get image from api and post it to server
         getImage(city)
             .then(data => {
-                let image = data.hits[0].pageURL
+                let image = data.hits[0].largeImageURL
+                // console.log(data);
                 appStorage.image = image;
             })
 
@@ -36,13 +37,15 @@ export function travelAppFunc() {
                 getWeather(cityData.lat, cityData.lng, startDate)
             })
             .then(() => {
-                setTimeout(() => {
-                    postData('/appStorage', { city: appStorage.city, image: appStorage.image, temp: appStorage.temp });
-                }, 2000)
+
+                postData('/appStorage', { city: appStorage.city, image: appStorage.image, temp: appStorage.temp });
+
             })
-        setTimeout(() => {
-            console.log(appStorage)
-        }, 2000)
+            .then(() => {
+                setTimeout(() => {
+                    updateUI(startDate, endDate);
+                })
+            })
     });
 
 }
@@ -68,7 +71,7 @@ let geoLocation = async (city) => {
 }
 
 // weather api
-let getWeather = async (lat, lon, startDate) => {
+let getWeather = async (lat, lon) => {
     let apiKey = 'ca3dc503fc9749e3bd5ce1859ee62e4d'
     // let url = `https://api.weatherbit.io/v2.0/forecast/daily?&lat=${lat}&lon=${lon}
     // &key=${apiKey}`;
@@ -78,6 +81,7 @@ let getWeather = async (lat, lon, startDate) => {
     try {
         const receivedData = await response.json();
         appStorage.temp = receivedData.data[0].app_temp;
+        document.getElementById('temperature').innerHTML = receivedData.data[0].app_temp;
         return receivedData;
     }
     catch (error) {
@@ -120,5 +124,21 @@ const postData = async (url = '', data = {}) => {
     }
 }
 
-// Add end date and display length of trip.
-// TODO
+
+// get info and update UI
+let updateUI = async (startDate, endDate) => {
+
+    const response = await fetch('/serverData');
+    try {
+        const data = await response.json();
+        document.getElementById('cityImage').innerHTML = `<img src="${data.image}" alt="city image">`;
+        document.getElementById('destination').innerHTML = data.city;
+        document.getElementById('stDate').innerHTML = startDate;
+        document.getElementById('eDate').innerHTML = endDate;
+    }
+    catch (error) {
+        console.log('error', error)
+    }
+}
+
+

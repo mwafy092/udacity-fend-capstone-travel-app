@@ -28,3 +28,8 @@ app.post('/appStorage', (request, response) => {
     console.log(serverStorage)
 })
 
+// send data to client
+app.get('/serverData', async (request, response) => {
+    const data = await serverStorage;
+    response.send(data);
+})
