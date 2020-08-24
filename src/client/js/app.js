@@ -1,5 +1,5 @@
 
-export function appFunc() {
+export function travelAppFunc() {
     let btn = document.querySelector('#btn');
     let overlay = document.querySelector('#overlay');
 
@@ -17,7 +17,18 @@ export function appFunc() {
         let city = document.getElementById('city').value;
         let startDate = document.getElementById('startDate').value;
         let endDate = document.getElementById('endDate').value;
-        console.log(city, startDate, endDate)
+
+        // main app data storage
+        let appStorage = {};
+        appStorage.city = city;
+
+        // get image from api and post it to server
+        getImage(city)
+            .then(data => {
+                let image = data.hits[0].pageURL
+                appStorage.image = image;
+            })
+
         geoLocation(city)
             .then(data => {
                 const newData = { lat: data.lat, lng: data.lng };
@@ -29,7 +40,8 @@ export function appFunc() {
     });
 }
 
-appFunc();
+// calling main function
+travelAppFunc();
 
 
 // Geo names api to get location
@@ -63,3 +75,40 @@ let getWeather = async (lat, lon) => {
     }
 
 }
+
+// pixabay api
+let getImage = async (searchItem) => {
+    let apiKey = '18025631-21fc69eb9242d4f0ccc554e3b'
+    let url = `https://pixabay.com/api/?key=${apiKey}&q=${searchItem}&image_type=photo`;
+    const response = await fetch(url);
+    try {
+        const data = await response.json();
+        return data;
+        // console.log(data);
+    }
+    catch (error) {
+        console.log('error: ', error);
+    }
+}
+
+// post data to server
+const postData = async (url = '', data = {}) => {
+    const request = await fetch(url, {
+        method: 'POST',
+        credentials: 'same-origin',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    })
+    try {
+        const newData = await request.json();
+        return newData
+    }
+    catch (error) {
+        console.log('error', error)
+    }
+}
+
+// Add end date and display length of trip.
+// TODO

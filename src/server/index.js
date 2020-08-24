@@ -16,3 +16,11 @@ let port = 3000;
 app.listen(port, function () {
     console.log(`server running on port ${port}!`)
 })
+
+
+// let appStorage = []
+// app.post('/appStorage', (request, response) => {
+//     appStorage.push(request.body)
+//     console.log(appStorage)
+// })
+
