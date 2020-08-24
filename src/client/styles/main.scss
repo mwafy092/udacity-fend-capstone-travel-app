@@ -118,6 +118,15 @@ input[type="button"]:hover {
     border: 1px solid #F89104;
 }
 
+.date {
+    // display: flex;
+    div {
+        margin-bottom: 0.5rem;
+    }
+    label {
+        margin-bottom: 0.2rem;
+    }
+}
 /* bottom section */
 .bottom-section .container {
     margin: 0;
