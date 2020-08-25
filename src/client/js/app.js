@@ -83,7 +83,8 @@ let getWeather = async (lat, lon, startDate) => {
     let current = `https://api.weatherbit.io/v2.0/current?lat=${lat}&lon=${lon}&key=${apiKey}`
     let forecast = `https://api.weatherbit.io/v2.0/forecast/daily?lat=${lat}&lon=${lon}&key=${apiKey}
     `
-    let url = '';
+    let url = '';   // url based on start date
+
     let date = new Date(startDate);
     if (isThisWeek(date)) {
         url = current
