@@ -131,7 +131,6 @@ let getImage = async (searchItem) => {
     const response = await fetch(url);
     try {
         const data = await response.json();
-        document.getElementById('cityImage').innerHTML = `<img src="${data.image}" alt="city image">`;
         return data;
     }
     catch (error) {
@@ -173,6 +172,7 @@ let updateUI = async (startDate, endDate) => {
     const response = await fetch('/serverData');
     try {
         const data = await response.json();
+        document.getElementById('cityImage').innerHTML = `<img src="${data.image}" alt="city image">`;
         document.getElementById('destination').innerHTML = data.city;
         document.getElementById('stDate').innerHTML = startDate;
         document.getElementById('eDate').innerHTML = endDate;
