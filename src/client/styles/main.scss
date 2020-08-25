@@ -164,7 +164,7 @@ input[type="button"]:hover {
 .overlay {
     position: absolute;
     width: 100vw;
-    height: 200vh;
+    height: 150vh;
     background: rgba(0, 0, 0, 0.9);
     color: white;
     letter-spacing: 0.5em;
@@ -176,9 +176,10 @@ input[type="button"]:hover {
 
 .bottom-section {
     display: grid;
-    grid-template-columns: 50% 50%;
+    grid-auto-rows: minmax(200px, auto);
     grid-template-areas: 
-    "image data"
+    "image"
+    "data"
     ;
     .city-image{
         grid-area: image;
@@ -186,6 +187,14 @@ input[type="button"]:hover {
         img {
             width: 100%;
             border-radius: 0.5rem;
+        }
+        p {
+            font-size: 1rem;
+            text-align: center;
+            text-transform: uppercase;
+            color: rgba(0, 191, 255, 0.671);
+            margin: 4rem auto;
+            font-weight: bold;
         }
     }
 }
@@ -238,10 +247,11 @@ input[type="button"]:hover {
         margin-top: 2.6em;
     }
     
-    .bottom-section .container {
+    .bottom-section {
         display: grid;
-        grid-template-columns: repeat(2, 50%);
-        grid-template-areas: "left right";
+        grid-template-columns: 50% 50%;
+        grid-template-areas: 
+        "image data";
     }
 
     .main-body {
@@ -251,9 +261,6 @@ input[type="button"]:hover {
         text-align: left;
     }
 
-    .food-img {
-        grid-area: left;
-    }
   
     
 }

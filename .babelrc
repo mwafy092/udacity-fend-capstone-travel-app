@@ -1,0 +1,13 @@
+{
+    "presets": [
+        [
+            "@babel/preset-env",
+            {
+                "exclude": [
+                    // eliminate regenerator runtime error
+                    "transform-regenerator"
+                ]
+            }
+        ]
+    ]
+}

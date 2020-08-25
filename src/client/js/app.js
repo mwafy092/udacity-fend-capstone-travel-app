@@ -1,53 +1,59 @@
-let appStorage = {};
+let appStorage = {};    // app storage object
+
 export function travelAppFunc() {
     let btn = document.querySelector('#btn');
     let overlay = document.querySelector('#overlay');
+    document.addEventListener('DOMContentLoaded', () => {
 
-    btn.addEventListener('click', () => {
-        // add grid to display and animations
-        overlay.style.display = "grid";
-        overlay.classList.add('overlay-animation');
 
-        // set display to none after 3 seconds 
-        setTimeout(function () {
-            overlay.style.display = "none";
-        }, 3000);
+        btn.addEventListener('click', () => {
+            // add grid to display and animations
+            overlay.style.display = "grid";
+            overlay.classList.add('overlay-animation');
 
-        // user information
-        let city = document.getElementById('city').value;
-        let startDate = document.getElementById('startDate').value;
-        let endDate = document.getElementById('endDate').value;
-        // main app data storage
-        appStorage.city = city;
+            // set display to none after 3 seconds 
+            setTimeout(function () {
+                overlay.style.display = "none";
+            }, 3000);
 
-        duration(startDate, endDate);
-        // get image from api and post it to server
-        getImage(city)
-            .then(data => {
-                let image = data.hits[0].largeImageURL
-                // console.log(data);
-                appStorage.image = image;
-            })
+            // user information
+            let city = document.getElementById('city').value;
+            let startDate = document.getElementById('startDate').value;
+            let endDate = document.getElementById('endDate').value;
+            // main app data storage
+            appStorage.city = city;
 
-        geoLocation(city)
-            .then(data => {
-                const newData = { lat: data.lat, lng: data.lng };
-                return newData;
-            })
-            .then(cityData => {
-                getWeather(cityData.lat, cityData.lng, startDate)
-            })
-            .then(() => {
+            // display length of trip.
+            duration(startDate, endDate);
 
-                postData('/appStorage', { city: appStorage.city, image: appStorage.image, temp: appStorage.temp });
-
-            })
-            .then(() => {
-                setTimeout(() => {
-                    updateUI(startDate, endDate);
+            // get image from api and post it to server
+            getImage(city)
+                .then(data => {
+                    let image = data.hits[0].largeImageURL
+                    // console.log(data);
+                    appStorage.image = image;
                 })
-            })
-    });
+
+            geoLocation(city)
+                .then(data => {
+                    const newData = { lat: data.lat, lng: data.lng };
+                    return newData;
+                })
+                .then(cityData => {
+                    getWeather(cityData.lat, cityData.lng, startDate)
+                })
+                .then(() => {
+
+                    postData('/appStorage', { city: appStorage.city, image: appStorage.image, temp: appStorage.temp });
+
+                })
+                .then(() => {
+                    setTimeout(() => {
+                        updateUI(startDate, endDate);
+                    })
+                })
+        })
+    })
 
 }
 
@@ -72,23 +78,56 @@ let geoLocation = async (city) => {
 }
 
 // weather api
-let getWeather = async (lat, lon) => {
+let getWeather = async (lat, lon, startDate) => {
     let apiKey = 'ca3dc503fc9749e3bd5ce1859ee62e4d'
-    // let url = `https://api.weatherbit.io/v2.0/forecast/daily?&lat=${lat}&lon=${lon}
-    // &key=${apiKey}`;
-    let url = `https://api.weatherbit.io/v2.0/current?lat=${lat}&lon=${lon}&key=${apiKey}`
-
-    const response = await fetch(url);
-    try {
-        const receivedData = await response.json();
-        appStorage.temp = receivedData.data[0].app_temp;
-        document.getElementById('temperature').innerHTML = receivedData.data[0].app_temp;
-        return receivedData;
+    let current = `https://api.weatherbit.io/v2.0/current?lat=${lat}&lon=${lon}&key=${apiKey}`
+    let forecast = `https://api.weatherbit.io/v2.0/forecast/daily?lat=${lat}&lon=${lon}&key=${apiKey}
+    `
+    let url = '';
+    let date = new Date(startDate);
+    if (isThisWeek(date)) {
+        url = current
+        const response = await fetch(url);
+        try {
+            const receivedData = await response.json();
+            appStorage.temp = receivedData.data[0].app_temp;
+            document.getElementById('temperature').innerHTML = receivedData.data[0].app_temp;
+            return receivedData;
+        }
+        catch (error) {
+            console.log('error:', error);
+        }
+    } else {
+        url = forecast
+        const response = await fetch(url);
+        try {
+            const receivedData = await response.json();
+            appStorage.temp = receivedData.data[0].app_temp;
+            document.getElementById('temperature').innerHTML = receivedData.data[0].temp;
+            return receivedData;
+        }
+        catch (error) {
+            console.log('error:', error);
+        }
     }
-    catch (error) {
-        console.log('error:', error);
-    }
 
+}
+// check if the day within a week
+function isThisWeek(date) {
+    const now = new Date();
+
+    const weekDay = (now.getDay() + 6) % 7; // Make sure Sunday is 6, not 0
+    const monthDay = now.getDate();
+    const mondayThisWeek = monthDay - weekDay;
+
+    const startOfThisWeek = new Date(+now);
+    startOfThisWeek.setDate(mondayThisWeek);
+    startOfThisWeek.setHours(0, 0, 0, 0);
+
+    const startOfNextWeek = new Date(+startOfThisWeek);
+    startOfNextWeek.setDate(mondayThisWeek + 7);
+
+    return date >= startOfThisWeek && date < startOfNextWeek;
 }
 
 // pixabay api
@@ -124,6 +163,8 @@ const postData = async (url = '', data = {}) => {
         console.log('error', error)
     }
 }
+
+// display length of trip.
 let duration = (startDate, endDate) => {
     let start = new Date(startDate);
     let end = new Date(endDate);

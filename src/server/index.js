@@ -12,13 +12,14 @@ app.use(cors());
 
 app.use(express.static('dist'))
 
-let port = 3000;
-app.listen(port, function () {
+let port = 4000;
+app.listen(port, () => {
     console.log(`server running on port ${port}!`)
 })
 
-
+// server storage object
 let serverStorage = {};
+
 app.post('/appStorage', (request, response) => {
     serverStorage = {
         city: request.body.city,
@@ -33,3 +34,9 @@ app.get('/serverData', async (request, response) => {
     const data = await serverStorage;
     response.send(data);
 })
+
+// to test the test process
+app.get('/test', async (req, res) => {
+    res.json({ message: 'pass!' })
+})
+
