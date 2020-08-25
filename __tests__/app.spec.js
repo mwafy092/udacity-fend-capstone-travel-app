@@ -13,3 +13,4 @@ describe("Testing the travelAppFunc() function", () => {
         expect(typeof travelAppFunc).toBe('function');
     });
 });
+

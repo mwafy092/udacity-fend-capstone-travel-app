@@ -12,7 +12,7 @@ app.use(cors());
 
 app.use(express.static('dist'))
 
-let port = 5005;
+let port = 8088;
 app.listen(port, () => {
     console.log(`server running on port ${port}!`)
 })
