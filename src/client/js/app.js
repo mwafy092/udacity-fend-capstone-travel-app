@@ -3,56 +3,46 @@ let appStorage = {};    // app storage object
 export function travelAppFunc() {
     let btn = document.querySelector('#btn');
     let overlay = document.querySelector('#overlay');
-    document.addEventListener('DOMContentLoaded', () => {
+    btn.addEventListener('click', () => {
+        // add grid to display and animations
+        overlay.style.display = "grid";
+        overlay.classList.add('overlay-animation');
 
+        // set display to none after 3 seconds 
+        setTimeout(function () {
+            overlay.style.display = "none";
+        }, 5000);
 
-        btn.addEventListener('click', () => {
-            // add grid to display and animations
-            overlay.style.display = "grid";
-            overlay.classList.add('overlay-animation');
+        // user information
+        let city = document.getElementById('city').value;
+        let startDate = document.getElementById('startDate').value;
+        let endDate = document.getElementById('endDate').value;
+        // main app data storage
+        appStorage.city = city;
+        getImage(city)
+            .then(data => {
+                let image = data.hits[1].largeImageURL
+                appStorage.image = image;
+            })
 
-            // set display to none after 3 seconds 
-            setTimeout(function () {
-                overlay.style.display = "none";
-            }, 3000);
+        // display length of trip.
+        duration(startDate, endDate)
+        geoLocation(city)
+            .then(data => {
+                const newData = { lat: data.lat, lng: data.lng };
+                return newData;
+            })
+            .then(cityData => {
+                getWeather(cityData.lat, cityData.lng, startDate)
+            })
+            .then(() => {
 
-            // user information
-            let city = document.getElementById('city').value;
-            let startDate = document.getElementById('startDate').value;
-            let endDate = document.getElementById('endDate').value;
-            // main app data storage
-            appStorage.city = city;
+                postData('/appStorage', { city: appStorage.city, image: appStorage.image, temp: appStorage.temp });
 
-            // display length of trip.
-            duration(startDate, endDate);
-
-            // get image from api and post it to server
-            getImage(city)
-                .then(data => {
-                    let image = data.hits[0].largeImageURL
-                    // console.log(data);
-                    appStorage.image = image;
-                })
-
-            geoLocation(city)
-                .then(data => {
-                    const newData = { lat: data.lat, lng: data.lng };
-                    return newData;
-                })
-                .then(cityData => {
-                    getWeather(cityData.lat, cityData.lng, startDate)
-                })
-                .then(() => {
-
-                    postData('/appStorage', { city: appStorage.city, image: appStorage.image, temp: appStorage.temp });
-
-                })
-                .then(() => {
-                    setTimeout(() => {
-                        updateUI(startDate, endDate);
-                    })
-                })
-        })
+            })
+            .then(() => {
+                updateUI(startDate, endDate)
+            })
     })
 
 }
@@ -139,7 +129,6 @@ let getImage = async (searchItem) => {
     try {
         const data = await response.json();
         return data;
-        // console.log(data);
     }
     catch (error) {
         console.log('error: ', error);
